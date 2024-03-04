@@ -1,5 +1,6 @@
 const e = require('express');
 const Interview = require('../models/Interview');
+const Company = require('../models/Company');
 
 exports.getInterviews = async (req, res, next) => {
     let query;
@@ -30,6 +31,14 @@ exports.getInterviews = async (req, res, next) => {
 
 exports.createInterview = async (req, res, next) => {
     try {
+        const date = new Date(req.body.date);
+        if(date < new Date('2022-05-10T00:00:00.000Z') || date > new Date('2022-05-13T23:59:59.000Z')) {
+            return res.status(400).json({success: false, message: 'Date is not in between 10-13 May 2022'});
+        }
+        const company = await Company.findById(req.body.company);
+        if(!company) {
+            return res.status(400).json({success: false, message: 'Company does not exist'});
+        }
         const interview = await Interview.create(req.body);
         res.status(201).json({success: true, data: interview});
     } catch (err) {
