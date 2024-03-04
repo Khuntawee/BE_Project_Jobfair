@@ -39,6 +39,11 @@ exports.createInterview = async (req, res, next) => {
         if(!company) {
             return res.status(400).json({success: false, message: 'Company does not exist'});
         }
+        //user can create up to 3 interviews
+        const interviews = await Interview.find({user: req.body.user});
+        if(interviews.length >= 3) {
+            return res.status(400).json({success: false, message: 'You can only create up to 3 interviews'});
+        }
         const interview = await Interview.create(req.body);
         res.status(201).json({success: true, data: interview});
     } catch (err) {
