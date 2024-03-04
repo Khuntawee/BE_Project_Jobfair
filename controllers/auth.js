@@ -62,6 +62,16 @@ const sendTokenResponse = (user, statusCode, res) => {
         .cookie('token', token, options)
         .json({success: true, token});
 };
+exports.logout=async(req,res,next)=>{
+    res.cookie('token','none',{
+        expires: new Date(Date.now()+ 10*1000),
+        httpOnly:true
+    });
+    res.status(200).json({
+        success:true,
+        data:{}
+    });
+};
 
 exports.getMe = async (req, res, next) => {
     try {
@@ -70,4 +80,14 @@ exports.getMe = async (req, res, next) => {
     } catch (err) {
         res.status(500).json({success: false, message: err.message});
     }
+};
+exports.logout=async(req,res,next)=>{
+    res.cookie('token','none',{
+        expires: new Date(Date.now()+ 10*1000),
+        httpOnly:true
+    });
+    res.status(200).json({
+        success:true,
+        data:{}
+    });
 };
